@@ -1,23 +1,17 @@
 // =========================
-// CHRONOMÈTRES INDÉPENDANTS AVEC NOM
+// CHRONOMÈTRES INDÉPENDANTS
 // =========================
 
-function Chronometre(chronoId, startPauseId, resetId, nameInputId, displayNameId, storageKey, nameKey) {
+// Fonction pour créer un chronomètre
+function Chronometre(chronoId, startPauseId, resetId, storageKey) {
     this.chronoElement = document.getElementById(chronoId);
     this.startPauseBtn = document.getElementById(startPauseId);
     this.resetBtn = document.getElementById(resetId);
-    this.nameInput = document.getElementById(nameInputId);
-    this.displayName = document.getElementById(displayNameId);
 
     this.seconds = parseInt(localStorage.getItem(storageKey)) || 0;
     this.timerRunning = false;
     this.interval = null;
     this.storageKey = storageKey;
-    this.nameKey = nameKey;
-
-    // Récupère et affiche le nom si déjà enregistré
-    this.nameInput.value = localStorage.getItem(this.nameKey) || "";
-    this.updateNameDisplay();
 
     // Met à jour l'affichage du chrono
     this.updateDisplay = function () {
@@ -52,28 +46,13 @@ function Chronometre(chronoId, startPauseId, resetId, nameInputId, displayNameId
         this.timerRunning = false;
     });
 
-    // Mise à jour du nom
-    this.nameInput.addEventListener("input", () => {
-        localStorage.setItem(this.nameKey, this.nameInput.value);
-        this.updateNameDisplay();
-    });
-
-    // Affichage dynamique du nom
-    this.updateNameDisplay = function () {
-        if (this.nameInput.value.trim() !== "") {
-            this.displayName.textContent = this.nameInput.value;
-        } else {
-            this.displayName.textContent = "Chrono";
-        }
-    };
-
     // Initialiser l'affichage
     this.updateDisplay();
 }
 
-// Créer deux chronomètres indépendants avec nom
-const chrono1 = new Chronometre("chrono1", "startPause1", "resetChrono1", "name1", "displayName1", "chrono1Seconds", "name1Key");
-const chrono2 = new Chronometre("chrono2", "startPause2", "resetChrono2", "name2", "displayName2", "chrono2Seconds", "name2Key");
+// Créer deux chronomètres indépendants
+const chrono1 = new Chronometre("chrono1", "startPause1", "resetChrono1", "chrono1Seconds");
+const chrono2 = new Chronometre("chrono2", "startPause2", "resetChrono2", "chrono2Seconds");
 
 // =========================
 // COMPTEUR DE SÉRIES
