@@ -21,8 +21,10 @@ h1 {
 }
 
 #chrono1, #chrono2 {
+    font-family: monospace;
+    text-align: center;
     font-size: 50px;
-    display: block;
+    display: inline-block;
     margin-bottom: 10px;
 }
 
@@ -58,4 +60,6 @@ h2 {
     margin-bottom: 10px;
     font-size: 0.8em;
 }
+
+
 
