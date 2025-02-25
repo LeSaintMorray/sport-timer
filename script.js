@@ -1,5 +1,5 @@
 // =========================
-// CHRONOMÈTRES PERSISTANTS
+// CHRONOMÈTRES PRÉCIS AVEC MILLISECONDES
 // =========================
 
 function Chronometre(chronoId, startPauseId, resetId, storageKey) {
@@ -17,9 +17,11 @@ function Chronometre(chronoId, startPauseId, resetId, storageKey) {
     this.updateDisplay = function () {
         let elapsed = this.timerRunning ? Date.now() - this.startTime + this.elapsedTime : this.elapsedTime;
         let totalSeconds = Math.floor(elapsed / 1000);
-        let min = Math.floor(totalSeconds / 60);
-        let sec = totalSeconds % 60;
-        this.chronoElement.textContent = `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = totalSeconds % 60;
+        let milliseconds = elapsed % 1000;
+
+        this.chronoElement.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}:${String(milliseconds).padStart(3, "0")}`;
     };
 
     // Démarrer / Pause
@@ -35,7 +37,7 @@ function Chronometre(chronoId, startPauseId, resetId, storageKey) {
             // Start
             this.startTime = Date.now();
             localStorage.setItem(this.storageKey + "_start", this.startTime);
-            this.interval = setInterval(() => this.updateDisplay(), 1000);
+            this.interval = setInterval(() => this.updateDisplay(), 10); // Mise à jour toutes les 10ms
             this.startPauseBtn.textContent = "Pause";
         }
         this.timerRunning = !this.timerRunning;
@@ -55,14 +57,14 @@ function Chronometre(chronoId, startPauseId, resetId, storageKey) {
 
     // Redémarrer le chrono si nécessaire après un rechargement
     if (this.timerRunning) {
-        this.interval = setInterval(() => this.updateDisplay(), 1000);
+        this.interval = setInterval(() => this.updateDisplay(), 10);
     }
 
     // Initialiser l'affichage
     this.updateDisplay();
 }
 
-// Créer deux chronomètres indépendants persistants
+// Créer deux chronomètres indépendants avec millisecondes
 const chrono1 = new Chronometre("chrono1", "startPause1", "resetChrono1", "chrono1");
 const chrono2 = new Chronometre("chrono2", "startPause2", "resetChrono2", "chrono2");
 
