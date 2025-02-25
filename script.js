@@ -122,5 +122,3 @@ function enablePiP() {
     }
 }
 
-// Activation du PiP au clic sur le bouton
-document.getElementById('pipBtn').addEventListener('click', enablePiP);
