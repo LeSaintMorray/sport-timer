@@ -1,5 +1,5 @@
 // =========================
-// CHRONOMÈTRES PRÉCIS AVEC MILLISECONDES
+// CHRONOMÈTRES AVEC CENTIÈMES (00:00:00)
 // =========================
 
 function Chronometre(chronoId, startPauseId, resetId, storageKey) {
@@ -9,19 +9,19 @@ function Chronometre(chronoId, startPauseId, resetId, storageKey) {
 
     this.startTime = localStorage.getItem(storageKey + "_start") ? parseInt(localStorage.getItem(storageKey + "_start")) : null;
     this.elapsedTime = localStorage.getItem(storageKey + "_elapsed") ? parseInt(localStorage.getItem(storageKey + "_elapsed")) : 0;
-    this.timerRunning = this.startTime !== null; // Vérifie si un chrono était en cours
+    this.timerRunning = this.startTime !== null;
     this.interval = null;
     this.storageKey = storageKey;
 
     // Mise à jour de l'affichage du chrono
     this.updateDisplay = function () {
         let elapsed = this.timerRunning ? Date.now() - this.startTime + this.elapsedTime : this.elapsedTime;
-        let totalSeconds = Math.floor(elapsed / 1000);
-        let minutes = Math.floor(totalSeconds / 60);
-        let seconds = totalSeconds % 60;
-        let milliseconds = elapsed % 1000;
+        let totalCentiseconds = Math.floor(elapsed / 10); // Conversion en centièmes
+        let minutes = Math.floor(totalCentiseconds / 6000);
+        let seconds = Math.floor((totalCentiseconds % 6000) / 100);
+        let centiseconds = totalCentiseconds % 100;
 
-        this.chronoElement.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}:${String(milliseconds).padStart(3, "0")}`;
+        this.chronoElement.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}:${String(centiseconds).padStart(2, "0")}`;
     };
 
     // Démarrer / Pause
@@ -30,14 +30,14 @@ function Chronometre(chronoId, startPauseId, resetId, storageKey) {
             // Pause
             this.elapsedTime += Date.now() - this.startTime;
             localStorage.setItem(this.storageKey + "_elapsed", this.elapsedTime);
-            localStorage.removeItem(this.storageKey + "_start"); // Supprime l'heure de départ
+            localStorage.removeItem(this.storageKey + "_start");
             clearInterval(this.interval);
             this.startPauseBtn.textContent = "Start";
         } else {
             // Start
             this.startTime = Date.now();
             localStorage.setItem(this.storageKey + "_start", this.startTime);
-            this.interval = setInterval(() => this.updateDisplay(), 10); // Mise à jour toutes les 10ms
+            this.interval = setInterval(() => this.updateDisplay(), 10);
             this.startPauseBtn.textContent = "Pause";
         }
         this.timerRunning = !this.timerRunning;
@@ -64,7 +64,7 @@ function Chronometre(chronoId, startPauseId, resetId, storageKey) {
     this.updateDisplay();
 }
 
-// Créer deux chronomètres indépendants avec millisecondes
+// Créer deux chronomètres indépendants avec centièmes
 const chrono1 = new Chronometre("chrono1", "startPause1", "resetChrono1", "chrono1");
 const chrono2 = new Chronometre("chrono2", "startPause2", "resetChrono2", "chrono2");
 
