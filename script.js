@@ -45,15 +45,21 @@ function Chronometre(chronoId, startPauseId, resetId, storageKey) {
 
     // Reset
     this.resetBtn.addEventListener("click", () => {
-        clearInterval(this.interval);
+        clearInterval(this.interval); 
+        this.interval = null; 
+        this.timerRunning = false; 
+        
         localStorage.removeItem(this.storageKey + "_start");
         localStorage.removeItem(this.storageKey + "_elapsed");
+    
         this.startTime = null;
         this.elapsedTime = 0;
+        
         this.updateDisplay();
+    
         this.startPauseBtn.textContent = "Start";
-        this.timerRunning = false;
     });
+    
 
     // Redémarrer le chrono si nécessaire après un rechargement
     if (this.timerRunning) {
@@ -99,3 +105,22 @@ resetCounterBtn.addEventListener("click", function () {
     localStorage.setItem("seriesCount", count);
     counterValue.textContent = count;
 });
+
+// Fonction pour activer le mode PiP
+function enablePiP() {
+    const chronoContainer = document.getElementById('chrono-container');
+    
+    // Vérifie si le navigateur prend en charge PiP
+    if (document.pictureInPictureEnabled && !document.pictureInPictureElement) {
+        chronoContainer.requestPictureInPicture()
+            .then(() => {
+                console.log("PiP activé !");
+            })
+            .catch(error => {
+                console.error("Erreur PiP :", error);
+            });
+    }
+}
+
+// Activation du PiP au clic sur le bouton
+document.getElementById('pipBtn').addEventListener('click', enablePiP);
